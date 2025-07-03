@@ -15,7 +15,7 @@ function SignUp() {
   const create = async (data) => {
     setError("");
     try {
-      const userData = authService.createAccount(data);
+      const userData = await authService.createAccount(data);
       if (userData) {
         const userData = await authService.getCurrentUser();
         if (userData) dispatch(login(userData));
@@ -26,7 +26,7 @@ function SignUp() {
     }
   };
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center flex-col py-5">
       <div
         className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}
       >
