@@ -21,12 +21,6 @@ function EditPost() {
     }
   }, [slug, navigate]);
   const userData = useSelector((state) => state.auth.userData);
-  useEffect(() => {
-    if (post && userData) {
-      console.log("Post.userId:", post.userID);
-      console.log("UserData.$id:", userData.$id);
-    }
-  }, [post, userData]);
 
   const isAuthor = post && userData && post.userID === userData.$id;
   if (!post) return null;
