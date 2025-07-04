@@ -107,8 +107,17 @@ export class Service {
       return false;
     }
   }
-  async getFilePreview(fileID) {
-    return this.bucket.getFilePreview(conf.appwriteBucketID, fileID);
+  async getFilePreview(fileId) {
+    try {
+      const result = await this.bucket.getFileView(
+        conf.appwriteBucketID,
+        fileId
+      );
+      return result;
+    } catch (error) {
+      console.log("Appwrite service :: getFileView :: error", error);
+      return null;
+    }
   }
 }
 
