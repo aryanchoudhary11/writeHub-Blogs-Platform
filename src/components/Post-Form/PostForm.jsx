@@ -9,7 +9,7 @@ function PostForm({ post }) {
     useForm({
       defaultValues: {
         title: post?.title || "",
-        slug: post?.slug || "",
+        slug: post?.$id || "",
         content: post?.content || "",
         status: post?.status || "active",
       },
@@ -45,27 +45,31 @@ function PostForm({ post }) {
         }
       }
     }
-    const slugTransform = useCallback((value) => {
-      if (value && typeof value == "string")
-        return value
-          .trim()
-          .toLowerCase()
-          .replace(/^[a-zA-Z\d\s]+/g, "-")
-          .replace(/\s/g, "-");
-      return "";
-    }, []);
-
-    useEffect(() => {
-      const subscription = watch((value, { name }) => {
-        if (name === "title") {
-          setValue("slug", slugTransform(value.title, { shoulValidate: true }));
-        }
-      });
-      return () => {
-        subscription.unsubscribe();
-      };
-    }, [watch, slugTransform, setValue]);
   };
+  const slugTransform = useCallback((value) => {
+    if (value && typeof value == "string")
+      return value
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .slice(0, 36);
+
+    return "";
+  }, []);
+
+  useEffect(() => {
+    const subscription = watch((value, { name }) => {
+      if (name === "title") {
+        setValue("slug", slugTransform(value.title, { shoulValidate: true }));
+      }
+    });
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [watch, slugTransform, setValue]);
+
   return (
     <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
       <div className="w-2/3 px-2">
