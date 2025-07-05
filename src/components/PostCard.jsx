@@ -16,13 +16,27 @@ function PostCard({ $id, featuredImage, title }) {
 
   return (
     <Link to={`/post/${$id}`}>
-      <div className="w-full bg-gray-100 rounded-xl p-4">
-        <div className="w-full justify-center mb-4">
-          <img src={imageUrl} alt={title} className="rounded-xl" />
+      <div className="w-full bg-white rounded-xl shadow hover:shadow-lg transition p-4">
+        <div
+          className="w-full flex justify-center items-center mb-4 bg-gray-100 rounded-lg overflow-hidden"
+          style={{ height: "12rem" }}
+        >
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={title}
+              className="w-full object-contain max-h-48 mx-auto"
+            />
+          ) : (
+            <div className="w-full h-full bg-gray-200 animate-pulse" />
+          )}
         </div>
-        <h2 className="text-xl font-bold">{title}</h2>
+        <h2 className="text-lg font-semibold text-gray-800 line-clamp-2 hover:text-blue-600 transition">
+          {title}
+        </h2>
       </div>
     </Link>
   );
 }
+
 export default PostCard;

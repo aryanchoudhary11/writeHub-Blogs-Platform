@@ -4,6 +4,7 @@ import { Container, PostCard } from "../components/index";
 
 function Home() {
   const [posts, setPosts] = useState([]);
+
   useEffect(() => {
     appwriteService.getPosts().then((posts) => {
       if (posts) {
@@ -14,31 +15,35 @@ function Home() {
 
   if (posts.length === 0) {
     return (
-      <div className="w-full py-8 mt-4 text-center">
+      <div className="min-h-[60vh] flex items-center justify-center bg-gray-100 py-12">
         <Container>
-          <div className="flex flex-wrap">
-            <div className="p-2 w-full">
-              <h1 className="text-2xl font-bold hover:text-gray-500">
-                Login to read posts
-              </h1>
-            </div>
+          <div className="text-center">
+            <h1 className="text-3xl font-semibold text-gray-700 mb-2">
+              No Posts Available
+            </h1>
+            <p className="text-gray-500 text-lg">
+              Login or create a post to get started.
+            </p>
           </div>
         </Container>
       </div>
     );
   }
+
   return (
-    <div className="w-full py-8">
+    <div className="w-full py-10 bg-gray-50 min-h-screen">
       <Container>
-        <div className="flex flex-wrap">
+        <h1 className="text-3xl font-bold text-center mb-10 text-gray-800">
+          Latest Blog Posts
+        </h1>
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {posts.map((post) => (
-            <div key={post.$id} className="p-2 w-1/4">
-              <PostCard {...post} />
-            </div>
+            <PostCard key={post.$id} {...post} />
           ))}
         </div>
       </Container>
     </div>
   );
 }
+
 export default Home;

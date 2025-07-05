@@ -39,40 +39,56 @@ function MyPosts() {
   };
 
   return (
-    <div className="py-8">
+    <div className="py-10 bg-gray-50 min-h-[70vh]">
       <Container>
-        <h1 className="text-2xl font-bold mb-6">My Posts</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+          My Blog Posts
+        </h1>
 
         {posts.length === 0 ? (
-          <p className="text-gray-600 text-lg">
-            You have not created any posts yet.
-          </p>
+          <div className="text-center py-10">
+            <p className="text-lg text-gray-500">
+              You have not created any posts yet.
+            </p>
+            <Link
+              to="/add-post"
+              className="inline-block mt-4 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Create Your First Post
+            </Link>
+          </div>
         ) : (
-          <div className="flex flex-wrap gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {posts.map((post) => (
-              <div key={post.$id} className="w-1/3 p-4 border rounded-lg">
+              <div
+                key={post.$id}
+                className="bg-white rounded-xl shadow hover:shadow-md transition border p-4 flex flex-col justify-between"
+              >
                 <Link to={`/post/${post.$id}`}>
-                  {imageUrls?.[post.$id] ? (
+                  {imageUrls[post.$id] ? (
                     <img
                       src={imageUrls[post.$id]}
                       alt={post.title}
-                      className="w-full rounded-lg mb-2"
+                      className="w-full h-48 object-cover rounded-md mb-3"
                     />
                   ) : (
-                    <div className="w-full h-48 bg-gray-200 rounded-lg mb-2 animate-pulse" />
+                    <div className="w-full h-48 bg-gray-200 rounded-lg animate-pulse mb-3" />
                   )}
-                  <h2 className="text-xl font-semibold">{post.title}</h2>
+                  <h2 className="text-xl font-semibold text-gray-800 line-clamp-2 hover:underline">
+                    {post.title}
+                  </h2>
                 </Link>
-                <div className="flex gap-2 mt-3">
+
+                <div className="flex gap-3 mt-4">
                   <Link
                     to={`/edit-post/${post.$id}`}
-                    className="px-3 py-1 bg-green-500 text-white rounded"
+                    className="flex-1 text-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                   >
                     Edit
                   </Link>
                   <button
                     onClick={() => handleDelete(post.$id, post.featuredImage)}
-                    className="px-3 py-1 bg-red-500 text-white rounded"
+                    className="flex-1 text-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                   >
                     Delete
                   </button>
