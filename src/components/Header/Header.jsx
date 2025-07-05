@@ -1,14 +1,16 @@
 import { Container, Logo } from "../index";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import authService from "../../Appwrite/auth";
 
 function Header() {
   const authStatus = useSelector((state) => state.auth.status);
   const userData = useSelector((state) => state.auth.userData);
   const navigate = useNavigate();
+  const location = useLocation();
   const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null); // 👈 ref for dropdown
 
   const navItems = [
     { name: "Home", slug: "/", active: true },
@@ -22,6 +24,23 @@ function Header() {
     await authService.logout();
     window.location.reload();
   };
+
+  // 👇 useEffect to detect outside clicks
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    if (showDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showDropdown]);
 
   return (
     <header className="py-4 shadow-md bg-white border-b border-gray-200">
@@ -40,7 +59,11 @@ function Header() {
                   <li key={item.name}>
                     <button
                       onClick={() => navigate(item.slug)}
-                      className="text-gray-700 hover:text-blue-600 font-medium px-4 py-2 rounded-md transition duration-200"
+                      className={`px-4 py-2 font-medium rounded-md transition duration-200 cursor-pointer ${
+                        location.pathname === item.slug
+                          ? "text-blue-600 bg-gray-100"
+                          : "text-gray-700 hover:text-blue-600"
+                      }`}
                     >
                       {item.name}
                     </button>
@@ -48,12 +71,12 @@ function Header() {
                 )
             )}
 
-            {/* Dropdown for logged in user */}
+            {/* Dropdown for logged-in user */}
             {authStatus && (
-              <li className="relative">
+              <li className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setShowDropdown((prev) => !prev)}
-                  className="bg-gray-800 text-white font-medium px-4 py-2 rounded-md hover:bg-gray-700 transition duration-200"
+                  className="text-gray-700 hover:text-blue-600 font-medium px-4 py-2 rounded-md transition duration-200 cursor-pointer"
                 >
                   {userData?.name || "Account"}
                 </button>
@@ -65,13 +88,17 @@ function Header() {
                         navigate("/my-posts");
                         setShowDropdown(false);
                       }}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700"
+                      className={`w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer ${
+                        location.pathname === "/my-posts"
+                          ? "text-blue-600 font-semibold"
+                          : "text-gray-700"
+                      }`}
                     >
                       My Posts
                     </button>
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 cursor-pointer"
                     >
                       Logout
                     </button>

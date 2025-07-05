@@ -34,8 +34,8 @@ function Login() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
       <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-xl border border-gray-200">
-        <div className="mb-6 text-center">
-          <Logo width="80px" />
+        <div className="mb-6 text-center flex flex-col items-center">
+          <Logo width="120px" />
           <h2 className="text-2xl font-semibold text-gray-800 mt-4">
             Sign in to your account
           </h2>

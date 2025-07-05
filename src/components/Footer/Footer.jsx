@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Logo from "../Logo";
+import inverted_logo from "../../assets/inverted_logo.png";
 
 function Footer() {
   return (
@@ -10,7 +10,7 @@ function Footer() {
           {/* Logo and copyright */}
           <div className="flex flex-col justify-between">
             <div className="mb-4">
-              <Logo width="120px" />
+              <img src={inverted_logo} alt="logo" style={{ width: "120px" }} />
             </div>
             <p className="text-sm text-gray-400">
               &copy; {new Date().getFullYear()} All Rights Reserved.
