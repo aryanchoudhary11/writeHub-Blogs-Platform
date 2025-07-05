@@ -9,7 +9,10 @@ function AllPost() {
     appwriteService.getPosts([]).then((posts) => {
       console.log("Fetched Posts:", posts);
       if (posts) {
-        setPosts(posts.documents);
+        const activePosts = posts.documents.filter(
+          (post) => post.status === "active"
+        );
+        setPosts(activePosts);
       }
     });
   }, []);

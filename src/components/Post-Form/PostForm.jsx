@@ -3,7 +3,7 @@ import { Button, Input, Select, RTE } from "../index";
 import appwriteService from "../../Appwrite/config";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 function PostForm({ post }) {
   const { register, handleSubmit, watch, setValue, control, getValues } =
@@ -36,6 +36,10 @@ function PostForm({ post }) {
 
       if (dbPost) navigate(`/post/${dbPost.$id}`);
     } else {
+      if (!userData || !userData.$id) {
+        console.error("User data is not available");
+        return;
+      }
       const file = await appwriteService.uploadFile(data.image[0]);
       if (file) {
         data.featuredImage = file.$id;
@@ -43,7 +47,14 @@ function PostForm({ post }) {
           ...data,
           userID: userData.$id,
         });
-        if (dbPost) navigate(`/post/${dbPost.$id}`);
+        console.log("Created post response:", dbPost);
+        if (dbPost && dbPost.$id) {
+          navigate(`/post/${dbPost.$id}`);
+        } else {
+          console.error("Post creation failed or missing $id", dbPost);
+        }
+      } else {
+        console.error("File upload failed");
       }
     }
   };
@@ -70,6 +81,17 @@ function PostForm({ post }) {
     });
     return () => subscription.unsubscribe();
   }, [watch, slugTransform, setValue]);
+  const [previewImageUrl, setPreviewImageUrl] = useState(null);
+
+  useEffect(() => {
+    const loadPreview = async () => {
+      if (post && post.featuredImage) {
+        const url = await appwriteService.getFilePreview(post.featuredImage);
+        setPreviewImageUrl(url);
+      }
+    };
+    loadPreview();
+  }, [post]);
 
   return (
     <form
@@ -113,7 +135,7 @@ function PostForm({ post }) {
         {post && (
           <div className="w-full rounded-md overflow-hidden border">
             <img
-              src={appwriteService.getFilePreview(post.featuredImage)}
+              src={previewImageUrl}
               alt={post.title}
               className="object-cover w-full h-48"
             />
