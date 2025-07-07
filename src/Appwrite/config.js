@@ -80,7 +80,7 @@ export class Service {
         queries
       );
     } catch (err) {
-      console.log("Appwrite service :: getPosts :: error ", err);
+      console.error("getPosts() failed:", err.message, err.code, err.response);
       return false;
     }
   }

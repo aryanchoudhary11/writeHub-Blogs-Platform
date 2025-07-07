@@ -11,10 +11,14 @@ function MyPosts() {
   const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
-    if (userData) {
+    if (userData?.$id) {
       appwriteService
-        .getPosts([Query.equal("userID", userData.$id)])
+        .getPosts([
+          Query.equal("userID", userData.$id),
+          Query.equal("status", "active"),
+        ])
         .then((res) => {
+          console.log("My Posts:", res);
           if (res) setPosts(res.documents);
         });
     }
