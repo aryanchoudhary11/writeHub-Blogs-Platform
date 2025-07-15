@@ -18,7 +18,7 @@ function MyPosts() {
           Query.equal("status", "active"),
         ])
         .then((res) => {
-          console.log("My Posts:", res);
+          // console.log("My Posts:", res);
           if (res) setPosts(res.documents);
         });
     }
